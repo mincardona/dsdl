@@ -21,4 +21,18 @@ abc =
         Release build mode (activates compiler optimizations, etc.)
     docs
         Creates documentation from source in REPO/docs/
-        
+
+Possible future additions:
+
+    High priority:
+        - Better KB + mouse input support
+        - Gamepad and haptic support
+        - Text input
+        - Timer callbacks
+        - Better render-to-texture support
+        - Geometric primitives
+
+    Low priority:
+        - Wrap SDL_net (low priority because std.socket provides similar functionality)
+        - Touchscreen support
+        - Audio recording (whenever it gets implemented in SDL)
