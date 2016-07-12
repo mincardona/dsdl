@@ -225,10 +225,6 @@ class Renderer : Releaseable {
         SDL_DestroyRenderer(renderer);
         renderer = null;
     }
-
-    public bool checkIntegrity() {
-        return renderer !is null;
-    }
     
     override public string toString() {
         return format("%s { vsync=%s, software=%s, accelerated=%s, targetTexture=%s }", 

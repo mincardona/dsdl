@@ -42,8 +42,4 @@ class MusicChunk : Releaseable {
         music = null;
     }
 
-    public bool checkIntegrity() {
-        return music !is null;
-    }
-
 }

@@ -45,8 +45,4 @@ class Font : Releaseable {
         font = null;
     }
 
-    public bool checkIntegrity() {
-        return font !is null;
-    }
-
 }

@@ -29,8 +29,4 @@ class SoundChunk : Releaseable {
         Mix_FreeChunk(chunk);
         chunk = null;
     }
-
-    public bool checkIntegrity() {
-        return chunk !is null;
-    }
 }

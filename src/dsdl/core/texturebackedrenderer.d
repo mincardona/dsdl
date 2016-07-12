@@ -93,10 +93,6 @@ class TextureBackedRenderer : Renderer {
         this.useTextureAsTarget = true;
     }
 
-    override public bool checkIntegrity() {
-        return super.checkIntegrity() && (texTarget !is null) && (win !is null);
-    }
-
     // closes the texture target and calls super.release()
     override public void release() {
         if (texTarget !is null)

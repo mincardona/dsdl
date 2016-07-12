@@ -97,10 +97,6 @@ class Window : Releaseable {
         SDL_DestroyWindow(this.window);
         window = null;
     }
-
-    public bool checkIntegrity() {
-        return window !is null;
-    }
 }
 
 enum WindowType {

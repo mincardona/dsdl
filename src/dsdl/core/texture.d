@@ -57,8 +57,4 @@ class Texture : Releaseable {
 		texture = null;
 	}
 
-	public bool checkIntegrity() {
-	    return texture !is null;
-	}
-
 }

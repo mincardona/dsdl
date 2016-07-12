@@ -24,8 +24,6 @@ import std.typecons;
 class TextureBank : ResourceBank!Texture {
     
     public static immutable MISSING_TEXTURE = "";
-
-    // TODO: add handling for the case the the texture isn't loaded due to some i/o error
     
     /**
      * Imports a collection of textures listed in a file. Textures which are already loaded (by identfier) are skipped.
@@ -37,19 +35,24 @@ class TextureBank : ResourceBank!Texture {
     public auto importAll(in string listFile, string rootAssetDir, Renderer rend, string defaultExtension = "png") {
         string[] lns;
         getLines(listFile, lns);
-        rootAssetDir = buildNormalizedPath(rootAssetDir);
-        auto results = tuple!("loaded", "skipped", "failed")(0, 0, 0);
+        rootAssetDir = buildNormalizedPath(rootAssetDir);   // optimize the root path
+        auto results = tuple!("loaded", "skipped", "failed")(0, 0, 0);  // return value
         
+        // process each input line separately
         foreach (ref string line; lns) {
+            // build the full path to the file
             string filePath = buildNormalizedPath(rootAssetDir, line);
             if (!isFileAndExists(filePath)) {
+                // if the file isn't found, then the default extension is implied
                 filePath ~= "." ~ defaultExtension;
                 if (!isFileAndExists(filePath)) {
                     // file not found!
                     results.failed++;
+                    continue;
                 }
             }
             if (!this.has(line)) {
+                // TODO: add handling for the case the the texture isn't loaded due to some i/o error
                 Texture tex = new Texture(filePath, rend);
                 this.set(line, tex);
                 results.loaded++;

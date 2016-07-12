@@ -18,10 +18,10 @@ class Sprite {
         assert(names.length == durations.length);
         this.ids = names.dup;
         this.durs = durations.dup;
-        _length = 0;
+        this._length = 0;
         foreach (int i; this.durs)
-            _length += i;
-        _timer = new Clock();
+            this._length += i;
+        this._timer = new Clock();
     }
     
     @property public Clock sequence() {
