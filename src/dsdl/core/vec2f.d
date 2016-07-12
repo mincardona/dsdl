@@ -90,14 +90,12 @@ struct vec2f {
     }
 
     /**
-     * Vector addition/substraction
+     * Vector binary operations
      */
     public vec2f opBinary(string op)(vec2f rhs) if (op == "+" || op == "-" || op == "*") {
-        if (op == "+")
-            return vec2(this.x + rhs.x, this.y + rhs.y);
-        else if (op == "-")
-            return vec2(this.x - rhs.x, this.y - rhs.y);
-        else if (op == "*")
+        if (op == "+" || op == "-")
+            return mixin("vec2f(this.x" ~ op ~ "rhs.x,this.y" ~ op ~ "rhs.y)");
+        else if (op == "*") // dot product
             return this.x * rhs.x + this.y * rhs.y;
     }
 
