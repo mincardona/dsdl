@@ -1,6 +1,5 @@
 module dsdl.core.sprite;
 
-
 import dsdl.core.texture;
 import dsdl.core.clock;
 import dsdl.core.texturebank;
@@ -17,9 +16,8 @@ class Sprite {
     
     public this(string[] names, int[] durations) {
         assert(names.length == durations.length);
-        // TODO: make immutable duplicates
-        this.ids = names;
-        this.durs = durations;
+        this.ids = names.dup;
+        this.durs = durations.dup;
         _length = 0;
         foreach (int i; this.durs)
             _length += i;
