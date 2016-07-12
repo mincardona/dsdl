@@ -17,7 +17,7 @@ import std.conv;
 import std.experimental.logger;
 
 int main(string[] args) {
-    string rootLoadingDir = "C:/Users/Michael/Pictures/My Creations/Roguelike";
+    string rootLoadingDir = "c:/";
     string imgSubdir = "/img/";
     string musSubdir = "/mus/";
     string sfxSubdir = "/sfx/";
