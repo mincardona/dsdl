@@ -30,7 +30,8 @@ class Font : Releaseable {
      *      index = the font to use from the given file (default 0)
      */
     public this(string filePath, int ptsize, int index = 0) {
-        TTF_OpenFontIndex(toStringz(filePath), ptsize, index);
+        auto cstr = toStringz(filePath);
+        this.font = TTF_OpenFontIndex(cstr, ptsize, index);
     }
 
     @property {

@@ -20,6 +20,7 @@ enum MS_PER_S = 1000;
 
 alias SDL_Color SDLColor;
 alias SDL_Rect SDLRect;
+alias SDL_Event SDLEvent;
 
 alias Resolution = Tuple!(uint, "h", uint, "v");
 
@@ -66,7 +67,14 @@ private void initModuleStates() {
     ];
 }
 
+void initLogger() {
+    sdlLogger = new MultiLogger();
+}
+
 bool initSDLModule(SDLModule mod) {
+    if (!moduleStates) {
+        initModuleStates();
+    }
     bool returnCode = false;
     if (queryModuleState(mod) == InitState.NOT_INIT) {
         final switch (mod) {

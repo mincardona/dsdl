@@ -1,4 +1,9 @@
 import std.stdio;
+import std.string;
+import derelict.sdl2.sdl;
+import derelict.sdl2.image;
+import derelict.sdl2.ttf;
+import dsdl.core.sdlutil;
 import dsdl.core.sdlutil;
 import dsdl.core.vec2f;
 import dsdl.core.renderer;
@@ -15,6 +20,7 @@ import dsdl.core.inputhandler;
 import dsdl.core.releaseable;
 import std.conv;
 import std.experimental.logger;
+import std.file;
 
 int main(string[] args) {
     string rootLoadingDir = "c:/";
@@ -23,9 +29,10 @@ int main(string[] args) {
     string sfxSubdir = "/sfx/";
     
     initSDLModule(SDLModule.MAIN);
-    initSDLModule(SDLModule.IMAGE);
     initSDLModule(SDLModule.TTF);
+    initSDLModule(SDLModule.IMAGE);
     
+    initLogger();
     auto stderrLogger = new FileLogger(stderr);
     stderrLogger.logLevel = LogLevel.warning;
     sdlLogger.insertLogger("stderr", stderrLogger);
@@ -34,12 +41,12 @@ int main(string[] args) {
     Renderer rend = new Renderer(win, true, true);
     
     TextureBank tbank = new TextureBank();
-    tbank.add("bottle", new Texture("tex/bottle.png"));
+    tbank.add("bottle", new Texture("spacequest.png", rend));
     
-    Font font = new Font("fon/FreePixel.ttf");
+    Font font = new Font("FreePixel.ttf", 12);
     
     rend.renderTexture(tbank.get("bottle"), 0, 0);
-    rend.renderText(renderer.toString(), font, 10, 100, Renderer.HIGH_QUALITY, SDLColor(0, 0, 0));
+    rend.renderText(rend.toString(), font, 10, 100, Renderer.HIGH_QUALITY, SDLColor(255, 0, 0));
     
     rend.render();
     
@@ -57,13 +64,14 @@ int main(string[] args) {
         }
     } while (!quit);
     
+    font.release();
+    tbank.removeAllAndRelease();
+    rend.release();
+    win.release();
+    
     quitSDLModule(SDLModule.TTF);
     quitSDLModule(SDLModule.IMAGE);
     quitSDLModule(SDLModule.MAIN);
-    
-    write("Press ENTER...");
-    stdout.flush();
-    readln();
     
 	return 0;
 }

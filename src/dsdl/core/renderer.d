@@ -1,5 +1,6 @@
 module dsdl.core.renderer;
 
+import std.stdio;
 import derelict.sdl2.sdl;
 import derelict.sdl2.ttf;
 import dsdl.core.sdlutil;
@@ -110,10 +111,12 @@ class Renderer : Releaseable {
      */
     public Texture renderTextToTexture(string txt, Font font, bool highQuality, in SDLColor fg) {
         SDL_Surface* surf = null;
-        if (highQuality)
-            surf = TTF_RenderText_Blended(font.ptr, toStringz(txt), fg);
-        else
-            surf = TTF_RenderText_Solid(font.ptr, toStringz(txt), fg);
+        auto cstr = toStringz(txt);
+        if (highQuality) {
+            surf = TTF_RenderText_Blended(font.ptr, cstr, fg);
+        } else {
+            surf = TTF_RenderText_Solid(font.ptr, cstr, fg);
+        }
         SDL_Texture* tex = SDL_CreateTextureFromSurface(this.ptr, surf);
         if (tex is null)
             return null;
@@ -231,7 +234,7 @@ class Renderer : Releaseable {
     
     override public string toString() {
         return format("%s { vsync=%s, software=%s, accelerated=%s, targetTexture=%s }", 
-            isVsyncEnabled, isSoftware, isAccelerated, isTargetTextureSupported);
+            name, isVsyncEnabled, isSoftware, isAccelerated, isTargetTextureSupported);
     }
 
 }

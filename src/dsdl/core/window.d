@@ -42,7 +42,7 @@ class Window : Releaseable {
     /**
      * Changes the fullscreen mode of this window, or disables fullscreen
      * Params:
-     *      t = the fullscreen mode to use
+     *      fsType = the fullscreen mode to use
      */
     public void setFullscreen(FullscreenType fsType) {
         SDL_SetWindowFullscreen(window, cast(SDL_WindowFlags)fsType);
