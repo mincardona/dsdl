@@ -38,7 +38,7 @@ int main(string[] args) {
     sdlLogger.insertLogger("stderr", stderrLogger);
     
     Window win = new Window("main.d", 640, 480, WindowType.WINDOWED);
-    Renderer rend = new Renderer(win, true, true);
+    Renderer rend = new Renderer(win, true, true, "opengl");
     
     TextureBank tbank = new TextureBank();
     tbank.add("bottle", new Texture("spacequest.png", rend));

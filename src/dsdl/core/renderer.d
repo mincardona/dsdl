@@ -1,5 +1,6 @@
 module dsdl.core.renderer;
 
+import std.regex;
 import std.stdio;
 import derelict.sdl2.sdl;
 import derelict.sdl2.ttf;
@@ -38,18 +39,34 @@ class Renderer : Releaseable {
      *      window = the window to use with this renderer
      *      doVsync = true if this renderer should use vertical sync
      *      doRenderTexture = true if this renderer must be capable of render-to-texture
+     *      prefer = string representing a regular expressiont o match to a preferred renderer name
      */
-    public this(Window window, bool doVsync, bool doRenderTexture) {
+    public this(Window window, bool doVsync, bool doRenderTexture, string prefer) {
         Uint32 flags = SDL_RENDERER_ACCELERATED;
         if (doVsync)
             flags |= SDL_RENDERER_PRESENTVSYNC;
         if (doRenderTexture)
             flags |= SDL_RENDERER_TARGETTEXTURE;
-        renderer = SDL_CreateRenderer(window.ptr, -1, flags);
+        
+        SDL_RendererInfo rinfo;
+        auto ex = regex(prefer);
+        int maxRender = SDL_GetNumRenderDrivers();
+        int renderIndex;
+        
+        for (renderIndex = 0; renderIndex < maxRender; renderIndex++) {
+            SDL_GetRenderDriverInfo(renderIndex, &rinfo);
+            auto indexName = fromStringz(rinfo.name);
+            if (!matchFirst(indexName, ex).empty)
+                break;
+        }
+        
+        if (renderIndex >= maxRender) {
+            renderIndex = -1;
+        }
+        
+        renderer = SDL_CreateRenderer(window.ptr, renderIndex, flags);
 
         drawColor = SDLColor(0, 0, 0, ALPHA_OPAQUE);
-
-        SDL_RendererInfo rinfo;
         // returns 0 on success
         SDL_GetRendererInfo(renderer, &rinfo);
         // .idup ensures that the converted string is an immutable deep copy
