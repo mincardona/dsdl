@@ -21,7 +21,7 @@ enum MS_PER_S = 1000;
 alias SDL_Color SDLColor;
 alias SDL_Rect SDLRect;
 
-alias Resolution = Tuple!(uint, "horiz", uint, "vert");
+alias Resolution = Tuple!(uint, "h", uint, "v");
 
 // This exists for compatibility with mixplayer: MixPlayer.hookMusicFinished (C <-> D compatibility)
 extern(C) alias MixPlayerCallback = void function();

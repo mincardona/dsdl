@@ -44,8 +44,8 @@ class Window : Releaseable {
      * Params:
      *      t = the fullscreen mode to use
      */
-    public void setFullscreen(FullscreenType t) {
-        SDL_SetWindowFullscreen(window, cast(SDL_WindowFlags)t);
+    public void setFullscreen(FullscreenType fsType) {
+        SDL_SetWindowFullscreen(window, cast(SDL_WindowFlags)fsType);
     }
 
     @property {

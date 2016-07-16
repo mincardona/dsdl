@@ -76,7 +76,7 @@ class TextureBackedRenderer : Renderer {
      *  vertical height of the window/screen, and centered with bars on
      *  either size.
      */
-    override public void present() {
+    override public void render() {
         int x = cast(int)((win.width - texTarget.width)/2) - 1;
         SDL_Rect src;
         src.x = src.y = 0;
@@ -89,7 +89,7 @@ class TextureBackedRenderer : Renderer {
         dest.w = win.width - 2 * x;
         this.useTextureAsTarget = false;
         this.renderTexture(texTarget, src, dest);
-        super.present();
+        super.render();
         this.useTextureAsTarget = true;
     }
 
@@ -102,9 +102,9 @@ class TextureBackedRenderer : Renderer {
     }
     
     /**
-     * Equivalent to "this.present(); this.clear();" but more optimized
+     * Equivalent to "this.render(); this.clear();" but more optimized
      */
-    override public void presentAndClear() {
+    override public void renderAndClear() {
         int x = cast(int)((win.width - texTarget.width)/2) - 1;
         SDL_Rect src;
         src.x = src.y = 0;
@@ -117,7 +117,7 @@ class TextureBackedRenderer : Renderer {
         dest.w = win.width - 2*x;
         this.useTextureAsTarget = false;
         this.renderTexture(texTarget, src, dest);
-        super.present();
+        super.render();
         super.clear();
         this.useTextureAsTarget = true;
         SDL_RenderClear(this.ptr);

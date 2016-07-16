@@ -23,17 +23,42 @@ int main(string[] args) {
     string sfxSubdir = "/sfx/";
     
     initSDLModule(SDLModule.MAIN);
+    initSDLModule(SDLModule.IMAGE);
+    initSDLModule(SDLModule.TTF);
     
     auto stderrLogger = new FileLogger(stderr);
     stderrLogger.logLevel = LogLevel.warning;
     sdlLogger.insertLogger("stderr", stderrLogger);
     
-    Grid!int g = new Grid!int(3, 3, 0);
-    for (int i = 0; i < g.area; i++)
-        g.set(i, i);
+    Window win = new Window("main.d", 640, 480, WindowType.WINDOWED);
+    Renderer rend = new Renderer(win, true, true);
     
-    g.addColumnsRight(2, 0);
+    TextureBank tbank = new TextureBank();
+    tbank.add("bottle", new Texture("tex/bottle.png"));
     
+    Font font = new Font("fon/FreePixel.ttf");
+    
+    rend.renderTexture(tbank.get("bottle"), 0, 0);
+    rend.renderText(renderer.toString(), font, 10, 100, Renderer.HIGH_QUALITY, SDLColor(0, 0, 0));
+    
+    rend.render();
+    
+    bool quit = false;
+    
+    SDLEvent e;
+    
+    do {
+        // Handle events on queue
+        while(SDL_PollEvent(&e) != 0) {
+            // User requests quit
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+    } while (!quit);
+    
+    quitSDLModule(SDLModule.TTF);
+    quitSDLModule(SDLModule.IMAGE);
     quitSDLModule(SDLModule.MAIN);
     
     write("Press ENTER...");

@@ -17,15 +17,34 @@ class Texture : Releaseable {
 	private int _width;
 	private int _height;
 
+    /**
+     * Loads a texture from a file.
+     * Params:
+     *      filePath = path to the texture file
+     *      renderer = the renderer to load the texture with
+     */
     public this(in string filePath, Renderer renderer) {
         this(IMG_LoadTexture(renderer.ptr, toStringz(filePath)));
 	}
 
+    /**
+     * Creates a texture object tied to an SDL_Texture struct.
+     * Params:
+     *      texture = pointer to texture struct
+     */
 	public this(SDL_Texture* texture) {
 		this.texture = texture;
 		SDL_QueryTexture(this.ptr, &this._format, null, &this._width, &this._height);
 	}
 
+    /**
+     * Creates a new (blank) texture.
+     * The texture is marked as a possible render target, and the exact contents of the new texture are undefined.
+     * Params:
+     *      width = the desired width of the texture
+     *      height = the desired height of the texture
+     *      rend = the renderer to create the texture with
+     */
 	public this(int width, int height, Renderer rend) {
 	    this._width = width;
 	    this._height = height;

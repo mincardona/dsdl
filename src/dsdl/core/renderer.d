@@ -15,7 +15,9 @@ import dsdl.core.releaseable;
  */
 class Renderer : Releaseable {
 
+    /** Used to specifiy high quality for certain operations. */
     public static immutable HIGH_QUALITY = true;
+    /** Used to specify low quality for certain operations. */
     public static immutable LOW_QUALITY = false;
 
     private SDL_Renderer* renderer;
@@ -55,6 +57,7 @@ class Renderer : Releaseable {
         _isSoftware = areFlagsSet(rinfo.flags, SDL_RENDERER_SOFTWARE);
         _isAccelerated = areFlagsSet(rinfo.flags, SDL_RENDERER_ACCELERATED);
         _isTargetTextureSupported = areFlagsSet(rinfo.flags, SDL_RENDERER_TARGETTEXTURE);
+        this.clear();
     }
 
     @property {
@@ -190,7 +193,7 @@ class Renderer : Releaseable {
 	/**
 	 * Renders the buffer to this renderer's associated window.
 	 */
-	public void present() {
+	public void render() {
 	    SDL_RenderPresent(this.ptr);
 	}
 
@@ -213,8 +216,8 @@ class Renderer : Releaseable {
         SDL_RenderClear(this.ptr);
     }
 
-    public void presentAndClear() {
-        this.present();
+    public void renderAndClear() {
+        this.render();
         this.clear();
     }
 
