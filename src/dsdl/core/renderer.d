@@ -41,7 +41,7 @@ class Renderer : Releaseable {
      *      doRenderTexture = true if this renderer must be capable of render-to-texture
      *      prefer = string representing a regular expressiont o match to a preferred renderer name
      */
-    public this(Window window, bool doVsync, bool doRenderTexture, string prefer) {
+    public this(Window window, bool doVsync, bool doRenderTexture, string prefer = "") {
         Uint32 flags = SDL_RENDERER_ACCELERATED;
         if (doVsync)
             flags |= SDL_RENDERER_PRESENTVSYNC;

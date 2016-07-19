@@ -10,7 +10,7 @@ import std.stdio;
 import std.typecons;
 import std.experimental.logger;
 
-// BEGIN SECTION VARIABLES_AND_TYPES
+// BEGIN SECTION CONSTANTS_AND_TYPES
 
 enum ALPHA_OPAQUE = SDL_ALPHA_OPAQUE;
 enum ALPHA_TRANSPARENT = SDL_ALPHA_TRANSPARENT;
@@ -22,7 +22,7 @@ alias SDL_Color SDLColor;
 alias SDL_Rect SDLRect;
 alias SDL_Event SDLEvent;
 
-alias Resolution = Tuple!(uint, "h", uint, "v");
+alias Resolution = Tuple!(uint, "x", uint, "y");
 
 // This exists for compatibility with mixplayer: MixPlayer.hookMusicFinished (C <-> D compatibility)
 extern(C) alias MixPlayerCallback = void function();
@@ -35,13 +35,9 @@ enum InitState {
     NOT_INIT, INIT, QUIT
 }
 
-private InitState[SDLModule] moduleStates = null;
+// END SECTION CONSTANTS_AND_TYPES
 
-/**
- * Logger used by DSDL code. This logger is initialized by initSDLMain()
- * and has no loggers attached to it until client code adds them.
- */
-MultiLogger sdlLogger = null;
+private InitState[SDLModule] moduleStates = null;
 
 // END SECTION VARIABLES_AND_TYPES
 
@@ -67,11 +63,26 @@ private void initModuleStates() {
     ];
 }
 
+/**
+ * Logger used by DSDL code. This logger is initialized by initSDLModule() or initLogger()
+ * and has no loggers attached to it until client code adds them.
+ */
+private MultiLogger _sdlLogger = null;
+
+@property {
+    MultiLogger sdlLogger() {
+        return _sdlLogger;
+    }
+}
+
 void initLogger() {
-    sdlLogger = new MultiLogger();
+    _sdlLogger = new MultiLogger();
 }
 
 bool initSDLModule(SDLModule mod) {
+    if (!_sdlLogger) {
+        initLogger();
+    }
     if (!moduleStates) {
         initModuleStates();
     }
@@ -79,9 +90,6 @@ bool initSDLModule(SDLModule mod) {
     if (queryModuleState(mod) == InitState.NOT_INIT) {
         final switch (mod) {
             case SDLModule.MAIN:
-                if (sdlLogger is null) {
-                    sdlLogger = new MultiLogger();
-                }
                 // Load the core SDL2 library
                 DerelictSDL2.load("SDL2.dll");
                 returnCode = SDL_Init(SDL_INIT_EVERYTHING) >= 0;
@@ -139,7 +147,7 @@ void quitSDLModule(SDLModule mod) {
  * Returns all lines from a file which are not prefixed by '#' as a string array
  * Also skips empty lines ( "" ) and lines containing only whitespace
  */
-bool getLines(string fname, out string[] lines) {
+void getLines(string fname, out string[] lines) {
     lines.length = 0;
     File f;
     try {
@@ -155,7 +163,6 @@ bool getLines(string fname, out string[] lines) {
     } finally {
         f.close();
     }
-    return true;
 }
 
 /**
@@ -178,6 +185,12 @@ bool areFlagsSet(ulong flagPile, ulong flags) {
     return (flagPile & flags) != 0;
 }
 
+/**
+ * Determines whether a path points to an extant file (and not a directory, etc.)
+ * Params:
+ *      path = path to the object
+ * Returns: true if the path points to an object which exists and is a file; false otherwise
+ */
 bool isFileAndExists(in string path) {
     return exists(path) && isFile(path);
 }

@@ -38,11 +38,11 @@ class Font : Releaseable {
         /**
          * A pointer to the underlying SDL_Font*
          */
-        public TTF_Font* ptr() { return font; }
+        public TTF_Font* ptr() { return this.font; }
     }
 
     override public void release() {
-        TTF_CloseFont(font);
+        TTF_CloseFont(this.font);
         font = null;
     }
 

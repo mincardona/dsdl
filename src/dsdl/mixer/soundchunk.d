@@ -22,11 +22,11 @@ class SoundChunk : Releaseable {
     }
 
     @property {
-        public Mix_Chunk* ptr() { return chunk; }
+        public Mix_Chunk* ptr() { return this.chunk; }
     }
 
     override public void release() {
-        Mix_FreeChunk(chunk);
-        chunk = null;
+        Mix_FreeChunk(this.chunk);
+        this.chunk = null;
     }
 }

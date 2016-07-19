@@ -29,7 +29,7 @@ class TextureBackedRenderer : Renderer {
     /**
      * Creates a hardware-accelerated texture renderer with black draw color.
      */
-    public this(Window window, bool doVsync, Texture ttarget, string prefer) {
+    public this(Window window, bool doVsync, Texture ttarget, string prefer = "") {
         super(window, doVsync, true, prefer);
         win = window;
         texTarget = ttarget;
@@ -37,7 +37,7 @@ class TextureBackedRenderer : Renderer {
     }
 
     // creates a new target access texture
-    public this(Window window, bool doVsync, int twidth, int theight, string prefer) {
+    public this(Window window, bool doVsync, int twidth, int theight, string prefer = "") {
         super(window, doVsync, true, prefer);
         win = window;
         texTarget = new Texture(twidth, theight, this);

@@ -6,7 +6,7 @@ import std.string;
 import dsdl.core.releaseable;
 
 /**
- * Encapsulates a sound as a piece of music.
+ * A sound which is a piece of music.
  * Authors: Michael Incardona
  */
 class MusicChunk : Releaseable {
@@ -34,12 +34,12 @@ class MusicChunk : Releaseable {
 
     @property {
         /** Pointer to the underlying Mix_Music */
-        public Mix_Music* ptr() { return music; }
+        public Mix_Music* ptr() { return this.music; }
     }
 
     override public void release() {
-        Mix_FreeMusic(music);
-        music = null;
+        Mix_FreeMusic(this.music);
+        this.music = null;
     }
 
 }
