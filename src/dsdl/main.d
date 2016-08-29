@@ -18,6 +18,7 @@ import dsdl.mixer.mixplayer;
 import dsdl.mixer.musicchunk;
 import dsdl.core.inputhandler;
 import dsdl.core.releaseable;
+import dsdl.core.event;
 import std.conv;
 import std.experimental.logger;
 import std.file;
