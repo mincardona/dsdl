@@ -26,13 +26,13 @@
             "name": "lib",
             "targetType": "library",
             "targetPath": "lib/",
-            "platforms": ["windows"]
+            "platforms": ["windows", "posix"]
         },
         {
             "name": "exe",
             "targetType": "executable",
             "targetPath": "bin/",
-            "platforms": ["windows"]
+            "platforms": ["windows", "posix"]
         }
     ]
 }

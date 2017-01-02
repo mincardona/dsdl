@@ -11,6 +11,12 @@ import std.typecons;
 import std.experimental.logger;
 
 // BEGIN SECTION CONSTANTS_AND_TYPES
+version (Windows) {
+    enum SDL2_DL_NAME = "SDL2.dll";
+    enum MIXER_DL_NAME = "SDL2_mixer.dll";
+    enum IMG_DL_NAME = "SDL2_image.dll";
+    enum TTF_DL_NAME = "SDL2_ttf.dll";
+}
 
 enum ALPHA_OPAQUE = SDL_ALPHA_OPAQUE;
 enum ALPHA_TRANSPARENT = SDL_ALPHA_TRANSPARENT;
@@ -90,25 +96,25 @@ bool initSDLModule(SDLModule mod) {
         final switch (mod) {
             case SDLModule.MAIN:
                 // Load the core SDL2 library
-                DerelictSDL2.load("SDL2.dll");
+                DerelictSDL2.load();
                 returnCode = SDL_Init(SDL_INIT_EVERYTHING) >= 0;
                 moduleStates[SDLModule.MAIN] = InitState.INIT;
                 break;
             case SDLModule.IMAGE:
                 // Load the SDL2_image library
-                DerelictSDL2Image.load("SDL2_image.dll");
+                DerelictSDL2Image.load();
                 returnCode = ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) == IMG_INIT_PNG);
                 moduleStates[SDLModule.IMAGE] = InitState.INIT;
                 break;
             case SDLModule.TTF:
                 // Load the SDL2_ttf library
-                DerelictSDL2ttf.load("SDL2_ttf.dll");
+                DerelictSDL2ttf.load();
                 returnCode = TTF_Init() != -1;
                 moduleStates[SDLModule.TTF] = InitState.INIT;
                 break;
             case SDLModule.MIXER:
                 // Load the SDL2_mixer library
-                DerelictSDL2Mixer.load("SDL2_mixer.dll");
+                DerelictSDL2Mixer.load();
                 Mix_Init(MIX_INIT_MP3 | MIX_INIT_FLAC);
                 returnCode = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 1, 1024) != -1;
                 moduleStates[SDLModule.MIXER] = InitState.INIT;
