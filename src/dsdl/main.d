@@ -5,7 +5,7 @@ import derelict.sdl2.image;
 import derelict.sdl2.ttf;
 import dsdl.core.sdlutil;
 import dsdl.core.sdlutil;
-import dsdl.core.vec2f;
+import dsdl.core.vec2;
 import dsdl.core.renderer;
 import dsdl.core.texturebackedrenderer;
 import dsdl.core.window;

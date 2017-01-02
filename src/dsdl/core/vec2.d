@@ -1,11 +1,12 @@
-module dsdl.core.vec2f;
+module dsdl.core.vec2;
 
 import std.math;
 import std.conv;
 
-alias vec2d = vec2!(double);
-alias vec2f = vec2!(float);
-alias vec2i = vec2!(int);
+alias vec2d = vec2!double;
+alias vec2f = vec2!float;
+alias vec2i = vec2!int;
+alias vec2l = vec2!long;
 
 /**
  * Represents a two-dimensional vector quantity.
@@ -15,11 +16,8 @@ alias vec2i = vec2!(int);
 struct vec2(T)
 if (__traits(isArithmetic, T) && !__traits(isUnsigned, T))
 {
-    private T _x;
-    private T _y;
-    private T _magnitude;
-
-    @disable this();
+    public T x;
+    public T y;
 
     /**
      * Creates a new 2D vector with the given component lengths
@@ -28,63 +26,27 @@ if (__traits(isArithmetic, T) && !__traits(isUnsigned, T))
      *      y = the magnitude of the y component
      */
     public this(T x, T y) {
-        this._x = x;
-        this._y = y;
-        this._magnitude = computeMagnitude();
-    }
-
-    @property {
-        /**
-         * The magnitude of this vector
-         */
-        public T magnitude() {
-           return _magnitude;
-        }
-        
-        public T magnitude(T val) {
-            this = this.unit * val;
-            return this.magnitude;
-        }
+        this.x = x;
+        this.y = y;
     }
 
     /**
      * Computes a unit vector (vector of magnitude 1) which points in
      *      the same direction as this vector
      */
-    public vec2!(T) unit() {
+    public vec2!T unit() {
         return this / this.magnitude;
     }
 
     /**
-     * The x component of this vector
+     * The magnitude of this vector
      */
-    @property public T x() {
-        return _x;
+    public T magnitude() {
+       return cast(T)sqrt(cast(double)(this.x * this.x + this.y * this.y));
     }
-
-    /**
-     * The y component of this vector
-     */
-    @property public T y() {
-        return _y;
-    }
-
-    /**
-     * The x component of this vector
-     */
-    @property public T x(T value) {
-        this._x = value;
-        this._magnitude = computeMagnitude();
-        return x;
-    }
-
-    /**
-     * The y component of this vector
-     */
-    @property public T y(T value) {
-        this._y = value;
-        this._magnitude = computeMagnitude();
-        return y;
+    
+    public vec2!T asMagnitude(T val) {
+        return this.unit * val;
     }
 
     /**
@@ -98,7 +60,7 @@ if (__traits(isArithmetic, T) && !__traits(isUnsigned, T))
     /**
      * Vector binary operations
      */
-    public vec2!(T) opBinary(string op)(vec2!(T) rhs) if (op == "+" || op == "-" || op == "*") {
+    public vec2!T opBinary(string op)(vec2!T rhs) if (op == "+" || op == "-" || op == "*") {
         if (op == "+" || op == "-")
             return mixin("vec2f(this.x" ~ op ~ "rhs.x,this.y" ~ op ~ "rhs.y)");
         else if (op == "*") // dot product
@@ -112,22 +74,15 @@ if (__traits(isArithmetic, T) && !__traits(isUnsigned, T))
      * Returns:
      *      The magnitude of the cross product
      */
-    public T cross(vec2!(T) rhs) {
+    public T cross(vec2!T rhs) {
         return this.x * rhs.y - this.y * rhs.x;
     }
 
     /**
      * Scalar operations - multiplication and division
      */
-    public vec2!(T) opBinary(string op)(T n) if (op == "*" || op == "/") {
+    public vec2!T opBinary(string op)(T n) if (op == "*" || op == "/") {
         return mixin("vec2!(T)(this.x" ~ op ~ "n,this.y" ~ op ~ "n)");
-    }
-
-    /**
-     * Computes the magnitude (length) of this vector
-     */
-    private T computeMagnitude() {
-        return cast(T)sqrt(cast(real)(this.x * this.x + this.y * this.y));
     }
 
 }
