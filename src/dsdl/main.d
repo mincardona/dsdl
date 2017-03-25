@@ -19,9 +19,11 @@ import dsdl.mixer.musicchunk;
 import dsdl.core.inputhandler;
 import dsdl.core.releaseable;
 import dsdl.core.event;
+import dsdl.core.joystick;
 import std.conv;
 import std.experimental.logger;
 import std.file;
+import core.thread;
 
 int main(string[] args) {
     string rootLoadingDir = "c:/";
@@ -40,12 +42,20 @@ int main(string[] args) {
     
     Window win = new Window("main.d", 640, 480, WindowType.WINDOWED);
     Renderer rend = new Renderer(win, true, true, "opengl");
-    
     rend.render();
+    
+    auto nofJoys = Joystick.howManyConnected;
+    
+    writefln("Found %s connected %s", nofJoys, plural("joystick", nofJoys));
+    foreach (i; 0 .. nofJoys) {
+        writefln("\t%s", Joystick.getNameOfDevice(i));
+    }
     
     bool quit = false;
     
     SDLEvent e;
+    
+    stdout.flush();
     
     do {
         // Handle events on queue
@@ -55,6 +65,7 @@ int main(string[] args) {
                 quit = true;
             }
         }
+        Thread.getThis().sleep(dur!("msecs")(5));
     } while (!quit);
     
     rend.release();
@@ -66,3 +77,11 @@ int main(string[] args) {
     
 	return 0;
 }
+
+string plural(string s, long howMany) {
+    if (howMany != 1) {
+        return s ~ "s";
+    }
+    return s;
+}
+
