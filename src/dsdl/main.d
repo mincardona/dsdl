@@ -41,14 +41,6 @@ int main(string[] args) {
     Window win = new Window("main.d", 640, 480, WindowType.WINDOWED);
     Renderer rend = new Renderer(win, true, true, "opengl");
     
-    TextureBank tbank = new TextureBank();
-    tbank.add("bottle", new Texture("spacequest.png", rend));
-    
-    Font font = new Font("FreePixel.ttf", 12);
-    
-    rend.renderTexture(tbank.get("bottle"), 0, 0);
-    rend.renderText(rend.toString(), font, 10, 100, Renderer.HIGH_QUALITY, SDLColor(255, 0, 0));
-    
     rend.render();
     
     bool quit = false;
@@ -65,8 +57,6 @@ int main(string[] args) {
         }
     } while (!quit);
     
-    font.release();
-    tbank.removeAllAndRelease();
     rend.release();
     win.release();
     
