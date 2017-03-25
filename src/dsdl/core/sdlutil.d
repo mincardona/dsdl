@@ -9,6 +9,7 @@ import std.string;
 import std.stdio;
 import std.typecons;
 import std.experimental.logger;
+import std.traits;
 
 // BEGIN SECTION CONSTANTS_AND_TYPES
 version (Windows) {
@@ -145,6 +146,12 @@ void quitSDLModule(SDLModule mod) {
                 break;
         }
         moduleStates[mod] = InitState.QUIT;
+    }
+}
+
+void quitAllSDLModules() {
+    foreach (SDLModule mod; EnumMembers!SDLModule) {
+        quitSDLModule(mod);
     }
 }
 
