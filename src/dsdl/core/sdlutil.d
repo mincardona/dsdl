@@ -127,14 +127,21 @@ bool initSDLModule(SDLModule mod) {
     return returnCode;
 }
 
-void quitSDLModule(SDLModule mod) {
+/**
+ * Quits an SDL module.
+ * Params:
+ *      mod the module to quit
+ * Returns: an error code
+ */
+int quitSDLModule(SDLModule mod) {
+    int code = 0;
     if (queryModuleState(mod) == InitState.INIT) {
         final switch (mod) {
             case SDLModule.MAIN:
                 SDL_Quit();
                 break;
             case SDLModule.IMAGE:
-                IMG_Quit();
+                code = IMG_Quit();
                 break;
             case SDLModule.TTF:
                 TTF_Quit();
@@ -147,8 +154,12 @@ void quitSDLModule(SDLModule mod) {
         }
         moduleStates[mod] = InitState.QUIT;
     }
+    return code;
 }
 
+/**
+ * Quits all SDL modules.
+ */
 void quitAllSDLModules() {
     foreach (SDLModule mod; EnumMembers!SDLModule) {
         quitSDLModule(mod);
