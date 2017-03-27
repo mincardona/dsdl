@@ -19,7 +19,7 @@ import dsdl.mixer.musicchunk;
 import dsdl.core.inputhandler;
 import dsdl.core.releaseable;
 import dsdl.core.event;
-import dsdl.core.joystick;
+//import dsdl.core.joystick;
 import std.conv;
 import std.experimental.logger;
 import std.file;
@@ -44,16 +44,13 @@ int main(string[] args) {
     Renderer rend = new Renderer(win, true, true, "opengl");
     rend.render();
     
-    auto nofJoys = Joystick.howManyConnected;
-    
-    writefln("Found %s connected %s", nofJoys, plural("joystick", nofJoys));
-    foreach (i; 0 .. nofJoys) {
-        writefln("\t%s", Joystick.getNameOfDevice(i));
-    }
-    
     bool quit = false;
     
     SDLEvent e;
+    
+    SDL_GameController* pad = SDL_GameControllerOpen(0);
+    SDL_Joystick* stick = SDL_JoystickOpen(0);
+    
     
     stdout.flush();
     
