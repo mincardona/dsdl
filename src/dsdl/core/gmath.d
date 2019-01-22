@@ -19,6 +19,7 @@ double randNorm() {
     // Twice as fast as computing them separately on x86
     // according to the phobos documentation.
     // https://dlang.org/phobos/std_math.html#.expi
+    // apparently deprecated now per compiler message?
     auto both = expi(m2);
     // real part == cosine
     cache = m1 * both.re;
