@@ -61,10 +61,11 @@ class Clock {
 	 * Returns: microseconds accumulated by this timer
 	 */
 	public ulong checkMicros() {
-		if (isRunning)
+		if (isRunning) {
 			return microsPassed(startTime, SDL_GetPerformanceCounter() + storedTime);
-		else
+        } else {
 			return microsPassed(0, storedTime);
+        }
 	}
 
 	/**
@@ -72,10 +73,11 @@ class Clock {
 	 * Returns: milliseconds accumulated by this timer
 	 */
 	public ulong checkMillis() {
-		if (isRunning)
+		if (isRunning) {
 			return millisPassed(startTime, SDL_GetPerformanceCounter() + storedTime);
-		else
+        } else {
 			return millisPassed(0, storedTime);
+        }
 	}
 
 	/**
@@ -83,21 +85,23 @@ class Clock {
 	 * Returns: seconds accumulated by this timer
 	 */
 	public ulong checkSeconds() {
-		if (isRunning)
+		if (isRunning) {
 			return secondsPassed(startTime, SDL_GetPerformanceCounter() + storedTime);
-		else
+        } else {
 			return secondsPassed(0, storedTime);
+        }
 	}
-	
+
 	/**
 	 * Check ticks recorded by the timer.
 	 * Returns: ticks accumulated by this timer
 	 */
 	public ulong checkTicks() {
-	    if (isRunning)
+	    if (isRunning) {
 	        return ticksPassed(startTime, SDL_GetPerformanceCounter() + storedTime);
-	    else
+        } else {
 	        return ticksPassed(0, storedTime);
+        }
 	}
 
 	/**
@@ -141,11 +145,11 @@ class Clock {
 	public static ulong secondsPassed(ulong perfTicks1, ulong perfTicks2) {
 		return (perfTicks2 - perfTicks1) / SDL_GetPerformanceFrequency();
 	}
-	
+
 	public static ulong ticksPassed(ulong perfTicks1, ulong perfTicks2) {
 	    return perfTicks2 - perfTicks1;
 	}
-	
+
 	public static ulong tickFrequency() {
 	    return SDL_GetPerformanceFrequency();
 	}

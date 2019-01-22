@@ -24,7 +24,7 @@ class Renderer : Releaseable {
 
     private SDL_Renderer* renderer;
     private SDLColor _drawColor;
-    
+
     /** Name of the renderer used (e.g. directx, opengl) */
     private string _name;
     /** Is this renderer vsynced? */
@@ -43,27 +43,30 @@ class Renderer : Releaseable {
      */
     public this(Window window, bool doVsync, bool doRenderTexture, string prefer = "") {
         Uint32 flags = SDL_RENDERER_ACCELERATED;
-        if (doVsync)
+        if (doVsync) {
             flags |= SDL_RENDERER_PRESENTVSYNC;
-        if (doRenderTexture)
+        }
+        if (doRenderTexture) {
             flags |= SDL_RENDERER_TARGETTEXTURE;
-        
+        }
+
         SDL_RendererInfo rinfo;
         auto ex = regex(prefer);
         int maxRender = SDL_GetNumRenderDrivers();
         int renderIndex;
-        
+
         for (renderIndex = 0; renderIndex < maxRender; renderIndex++) {
             SDL_GetRenderDriverInfo(renderIndex, &rinfo);
             auto indexName = fromStringz(rinfo.name);
-            if (!matchFirst(indexName, ex).empty)
+            if (!matchFirst(indexName, ex).empty) {
                 break;
+            }
         }
-        
+
         if (renderIndex >= maxRender) {
             renderIndex = -1;
         }
-        
+
         renderer = SDL_CreateRenderer(window.ptr, renderIndex, flags);
 
         drawColor = SDLColor(0, 0, 0, ALPHA_OPAQUE);
@@ -99,19 +102,19 @@ class Renderer : Releaseable {
         public string name() {
             return _name;
         }
-        
+
         public bool isVsyncEnabled() {
             return _isVsyncEnabled;
         }
-        
+
         public bool isSoftware() {
             return _isSoftware;
         }
-        
+
         public bool isAccelerated() {
             return _isAccelerated;
         }
-        
+
         public bool isTargetTextureSupported() {
             return _isTargetTextureSupported;
         }
@@ -135,10 +138,11 @@ class Renderer : Releaseable {
             surf = TTF_RenderText_Solid(font.ptr, cstr, fg);
         }
         SDL_Texture* tex = SDL_CreateTextureFromSurface(this.ptr, surf);
-        if (tex is null)
+        if (tex is null) {
             return null;
-        else
+        } else {
             return new Texture(tex);
+        }
     }
 
     /**
@@ -155,10 +159,11 @@ class Renderer : Releaseable {
         SDL_Surface* surf = null;
         surf = TTF_RenderText_Shaded(font.ptr, toStringz(txt), fg, bg);
         SDL_Texture* tex = SDL_CreateTextureFromSurface(this.ptr, surf);
-        if (tex is null)
+        if (tex is null) {
             return null;
-        else
+        } else {
             return new Texture(tex);
+        }
     }
 
     /**
@@ -248,9 +253,9 @@ class Renderer : Releaseable {
         SDL_DestroyRenderer(renderer);
         renderer = null;
     }
-    
+
     override public string toString() {
-        return format("%s { vsync=%s, software=%s, accelerated=%s, targetTexture=%s }", 
+        return format("%s { vsync=%s, software=%s, accelerated=%s, targetTexture=%s }",
             name, isVsyncEnabled, isSoftware, isAccelerated, isTargetTextureSupported);
     }
 

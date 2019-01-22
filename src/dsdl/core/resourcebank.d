@@ -10,12 +10,12 @@ if (is(T : Releaseable))
 {
     /** The inner associative array which matches string identifier keys to values of type T */
     protected T[string] resArray;
-    
+
     /** Constructs an empty bank. */
     public this() {
         // nop
     }
-    
+
     /**
      * Gets a resource from the bank using its identifier.
      * Throws: RangeError if the identifier is not found.
@@ -23,7 +23,7 @@ if (is(T : Releaseable))
     public T get(in string identifier) {
         return resArray[identifier];
     }
-    
+
     /**
      * Gets a resource from the bank using its identifier.
      * If the identifier is not valid, returns some default value.
@@ -35,7 +35,7 @@ if (is(T : Releaseable))
     public T get(in string identifier, lazy T defaultValue) {
         return resArray.get(identifier, defaultValue);
     }
-    
+
     /**
      * If the identifier is not already part of the collection, then adds the (identifier, resource) pair.
      * Params:
@@ -50,7 +50,7 @@ if (is(T : Releaseable))
         this.set(identifier, resource);
         return true;
     }
-    
+
     /**
      * Adds a resource to this collection under a given identifier.
      * If the identifier already referred to a resource, that resource is discarded without being released.
@@ -61,7 +61,7 @@ if (is(T : Releaseable))
     public void set(in string identifier, T resource) {
         resArray[identifier] = resource;
     }
-    
+
     /**
      * Adds a resource to this collection under a given identifier.
      * If the identifier already referred to a resource, that resource is released and discarded.
@@ -75,7 +75,7 @@ if (is(T : Releaseable))
         }
         this.set(identifier, resource);
     }
-    
+
     /**
      * Determines whether a resource exists in this collection.
      * Params:
@@ -85,7 +85,7 @@ if (is(T : Releaseable))
     public bool has(in string identifier) {
         return (identifier in resArray) !is null;
     }
-    
+
     /**
      * Removes a resource from this collection without releasing it.
      * Params:
@@ -95,7 +95,7 @@ if (is(T : Releaseable))
     public bool remove(in string identifier) {
         return resArray.remove(identifier);
     }
-    
+
     /**
      * Removes a resource from this collection after releasing it.
      * Params:
@@ -106,7 +106,7 @@ if (is(T : Releaseable))
         this.get(identifier).release();
         this.remove(identifier);
     }
-    
+
     /**
      * Removes all resources from this collection without releasing them.
      */
@@ -115,7 +115,7 @@ if (is(T : Releaseable))
             this.remove(key);
         }
     }
-    
+
     /**
      * Removes all resources from this collection after releasing them.
      */
@@ -124,14 +124,14 @@ if (is(T : Releaseable))
             this.removeAndRelease(key);
         }
     }
-    
+
     /**
      * Equivalent to removeAllAndRelease()
      */
     public void release() {
         this.removeAllAndRelease();
     }
-    
+
     @property {
         /**
          * The number of (identifier, resource) pairs in this collection.
@@ -140,6 +140,5 @@ if (is(T : Releaseable))
             return resArray.length;
         }
     }
-    
-}
 
+}

@@ -10,4 +10,3 @@ interface Releaseable {
      */
     abstract public void release();
 }
-

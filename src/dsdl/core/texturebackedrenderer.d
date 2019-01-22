@@ -50,13 +50,15 @@ class TextureBackedRenderer : Renderer {
      * Switches this renderer between render-to-texture and render-to-window modes
      */
     @property private bool useTextureAsTarget(bool val) {
-        if (this.texture is null)
+        if (this.texture is null) {
             return _useTextureAsTarget;
+        }
         _useTextureAsTarget = val;
-        if (val)
+        if (val) {
             SDL_SetRenderTarget(this.ptr, texTarget.ptr);
-        else
+        } else {
             SDL_SetRenderTarget(this.ptr, null);
+        }
         return val;
     }
 
@@ -95,12 +97,13 @@ class TextureBackedRenderer : Renderer {
 
     // closes the texture target and calls super.release()
     override public void release() {
-        if (texTarget !is null)
+        if (texTarget !is null) {
             texTarget.release();
+        }
         texTarget = null;
         super.release();
     }
-    
+
     /**
      * Equivalent to "this.render(); this.clear();" but more optimized
      */

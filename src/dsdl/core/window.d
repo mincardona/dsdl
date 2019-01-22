@@ -56,14 +56,14 @@ class Window : Releaseable {
         public SDL_Window* ptr() {
             return window;
         }
-        
+
         /**
          * the window/application title (shows in the titlebar)
          */
         public string title() {
             return this._title;
         }
-        
+
         public string title(string tl) {
             SDL_SetWindowTitle(this.window, toStringz(tl));
             this._title = tl;

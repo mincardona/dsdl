@@ -22,13 +22,13 @@ import std.typecons;
  * Authors: Michael Incardona
  */
 class TextureBank : ResourceBank!Texture {
-    
+
     public static immutable MISSING_TEXTURE = "";
-    
+
     /**
      * Imports a collection of textures listed in a file. Textures which are already loaded (by identfier) are skipped.
      * If a texture cannot be located from the identifier in the file, the defaultExtension is applied.
-     * Returns: A tuple of three integers: loaded (nof textures that are now loaded), 
+     * Returns: A tuple of three integers: loaded (nof textures that are now loaded),
      *                                     skipped (nof textures that were already loaded),
      *                                     failed (nof textures that could not be loaded).
      */
@@ -37,7 +37,7 @@ class TextureBank : ResourceBank!Texture {
         getLines(listFile, lns);
         rootAssetDir = buildNormalizedPath(rootAssetDir);   // optimize the root path
         auto results = tuple!("loaded", "skipped", "failed")(0, 0, 0);  // return value
-        
+
         // process each input line separately
         foreach (ref string line; lns) {
             // build the full path to the file
@@ -62,6 +62,5 @@ class TextureBank : ResourceBank!Texture {
         }
         return results;
     }
-    
-}
 
+}

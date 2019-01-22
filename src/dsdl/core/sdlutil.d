@@ -178,8 +178,9 @@ void getLines(string fname, out string[] lines) {
         string line;
         while ((line = f.readln()) !is null) {
             line = strip(line);
-            if (line == "")
+            if (line == "") {
                 continue;
+            }
             lines.length++;
             lines[$-1] = line;
         }

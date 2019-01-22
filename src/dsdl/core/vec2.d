@@ -44,7 +44,7 @@ if (__traits(isArithmetic, T) && !__traits(isUnsigned, T))
     public T magnitude() {
        return cast(T)sqrt(cast(double)(this.x * this.x + this.y * this.y));
     }
-    
+
     public vec2!T asMagnitude(T val) {
         return this.unit * val;
     }
@@ -61,10 +61,11 @@ if (__traits(isArithmetic, T) && !__traits(isUnsigned, T))
      * Vector binary operations
      */
     public vec2!T opBinary(string op)(vec2!T rhs) if (op == "+" || op == "-" || op == "*") {
-        if (op == "+" || op == "-")
+        if (op == "+" || op == "-") {
             return mixin("vec2f(this.x" ~ op ~ "rhs.x,this.y" ~ op ~ "rhs.y)");
-        else if (op == "*") // dot product
+        } else if (op == "*") { // dot product
             return this.x * rhs.x + this.y * rhs.y;
+        }
     }
 
     /**
@@ -86,4 +87,3 @@ if (__traits(isArithmetic, T) && !__traits(isUnsigned, T))
     }
 
 }
-

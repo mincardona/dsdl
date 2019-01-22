@@ -47,4 +47,3 @@ double randNormClamp(double mean, double stddev) {
 uint randNormUint(uint min, uint max) {
     return cast(uint)(randNorm() * (max - min) + min);
 }
-
