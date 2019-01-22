@@ -11,9 +11,10 @@ xyz =
         SDL_image: https://www.libsdl.org/projects/SDL_image/
         SDL_mixer: https://www.libsdl.org/projects/SDL_mixer/
         SDL_ttf: https://www.libsdl.org/projects/SDL_ttf/
+        On Ubuntu, install the libsdl2-dev, libsdl2-image-dev, libsdl2-mixer-dev, snd libsdl2-ttf-dev packages.
     lib
         Creates a static .lib file in REPO/lib/
-    
+
 abc =
     debug
         Debug build mode
