@@ -16,7 +16,7 @@ class Joystick {
         public static ref const(Joystick[SDL_JoystickID]) openJoysticks() {
             return openSticks;
         }
-        
+
         /**
          * Tells the number of joystick devices connected to the system.
          * Returns: the number of joysticks
@@ -24,12 +24,12 @@ class Joystick {
         public static int howManyConnected() {
             return SDL_NumJoysticks();
         }
-        
+
         /**
          * Tells the number of joystick devices currently open.
          * Returns: the number of joysticks
          */
-        public static int howManyOpen() {
+        public static ulong howManyOpen() {
             return Joystick.openJoysticks.length;
         }
     }
@@ -46,14 +46,14 @@ class Joystick {
             Joystick.openSticks.remove(id);
         }
     }
-    
+
     public static void releaseAll() {
         auto keys = Joystick.openJoysticks.keys;
         foreach (key; keys) {
             Joystick.release(key);
         }
     }
-    
+
     /**
      * Opens a Joysitck based on the given index and adds it to
      * the list of open sticks.
@@ -66,11 +66,11 @@ class Joystick {
         // create a new joystick and get the ID
         Joystick joy = new Joystick(index);
         auto id = joy.instanceId;
-        
+
         if (id < 0) {
             return null;
         }
-        
+
         // test if a joystick with the same ID is already in the array
         if ((id in Joystick.openSticks) == null) {
             Joystick.openSticks[id] = joy;
@@ -78,11 +78,11 @@ class Joystick {
             // two open joysticks have the same ID
             // it looks like these two joysticks will have the same
             // ptr handle (based on the docs), so just throw the new one away
-            
+
             // assert(Joysticks.byInstanceId(id).ptr == joy.ptr);
             joy = Joystick.byInstanceId(id);
         }
-        
+
         return joy;
     }
 
@@ -95,24 +95,24 @@ class Joystick {
         this._indexUsed = index;
         this.stick = SDL_JoystickOpen(index);
     }
-    
+
     protected void release() {
         SDL_JoystickClose(stick);
     }
-    
+
     @property {
         SDL_Joystick* ptr() {
             return stick;
         }
-        
+
         SDL_JoystickID instanceId() {
             return SDL_JoystickInstanceID(this.ptr);
         }
-        
+
         int indexUsed() {
             return this._indexUsed;
         }
     }
-    
+
 }
 
