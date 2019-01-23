@@ -129,7 +129,7 @@ class Renderer : Releaseable {
      *      fg = the color to draw the text in
      * Returns: a texture containing the rendered text
      */
-    public Texture renderTextToTexture(string txt, Font font, bool highQuality, in SDLColor fg) {
+    public Texture renderTextToTexture(string txt, Font font, bool highQuality, SDLColor fg) {
         SDL_Surface* surf = null;
         auto cstr = toStringz(txt);
         if (highQuality) {
@@ -155,7 +155,7 @@ class Renderer : Releaseable {
      * Returns: a texture containing the rendered text
      */
     public Texture renderTextToTextureShaded(string txt, Font font,
-                                             in SDLColor fg, in SDLColor bg) {
+                                             SDLColor fg, SDLColor bg) {
         SDL_Surface* surf = null;
         surf = TTF_RenderText_Shaded(font.ptr, toStringz(txt), fg, bg);
         SDL_Texture* tex = SDL_CreateTextureFromSurface(this.ptr, surf);
@@ -177,7 +177,7 @@ class Renderer : Releaseable {
      *      fg = the color to draw the text in
      */
     public void renderText(string txt, Font font, int x, int y,
-                           bool highQuality, in SDLColor fg) {
+                           bool highQuality, SDLColor fg) {
         Texture tex = renderTextToTexture(txt, font, highQuality, fg);
         renderTexture(tex, x, y);
     }
@@ -193,7 +193,7 @@ class Renderer : Releaseable {
      *      bg = the desired color of the text's highlighted background
      */
     public void renderTextShaded(string txt, Font font, int x, int y,
-                           in SDLColor fg, in SDLColor bg) {
+                                 SDLColor fg, SDLColor bg) {
         Texture tex = renderTextToTextureShaded(txt, font, fg, bg);
         renderTexture(tex, x, y);
     }
@@ -229,7 +229,7 @@ class Renderer : Releaseable {
      *      src = the portion of the texture to render
      *      dest = the target area
      */
-    public void renderTexture(Texture img, in SDLRect src, in SDL_Rect dest) {
+    public void renderTexture(Texture img, SDLRect src, SDL_Rect dest) {
 		SDL_RenderCopy(this.ptr, img.ptr, &src, &dest);
 		return;
 	}
