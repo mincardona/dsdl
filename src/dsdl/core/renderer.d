@@ -25,6 +25,8 @@ class Renderer : Releaseable {
     private SDL_Renderer* renderer;
     private SDLColor _drawColor;
 
+    private Texture renderTarget;
+
     /** Name of the renderer used (e.g. directx, opengl) */
     private string _name;
     /** Is this renderer vsynced? */
@@ -49,6 +51,8 @@ class Renderer : Releaseable {
         if (doRenderTexture) {
             flags |= SDL_RENDERER_TARGETTEXTURE;
         }
+
+        renderTarget = null;
 
         SDL_RendererInfo rinfo;
         auto ex = regex(prefer);
@@ -215,8 +219,43 @@ class Renderer : Releaseable {
 		return;
 	}
 
+    /**
+     * Sets a texture as the render target, or restores the target to the
+     * default.
+     *
+     * A texture target must be created with the TARGET access pattern.
+     *
+     * @warning Bypassing this method to set the texture target through the
+     * SDL_Renderer* will cause problems.
+     *
+     * @warning Resetting the render target to the default will not free the old
+     * render target.
+     *
+     * @param tex the texture to use as a target, or null to reset to the
+     * default target
+     */
+    public void setRenderTarget(Texture tex) {
+        // TODO: handle errors when after calling SDL_SetRenderTarget
+        if (tex is null) {
+            this.renderTarget = null;
+            SDL_SetRenderTarget(this.ptr, null);
+        } else {
+            // also store the texture in this object
+            this.renderTarget = tex;
+            SDL_SetRenderTarget(this.ptr, tex.ptr);
+        }
+    }
+
+    /**
+     * Gets the current render target
+     * @return the current render target, or null for the default target.
+     */
+    public Texture getRenderTarget() {
+        return renderTarget;
+    }
+
 	/**
-	 * Renders the buffer to this renderer's associated window.
+	 * Renders the buffer to this renderer's associated target
 	 */
 	public void render() {
 	    SDL_RenderPresent(this.ptr);
@@ -247,7 +286,7 @@ class Renderer : Releaseable {
     }
 
     /**
-     * Frees all resources used by this renderer.
+     * Frees all resources used by this renderer. Does NOT free the render target.
      */
     override public void release() {
         SDL_DestroyRenderer(renderer);
