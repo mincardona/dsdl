@@ -5,7 +5,12 @@ import derelict.sdl2.image;
 import std.string;
 import dsdl.core.renderer;
 import dsdl.core.releaseable;
-import dsdl.core.sdlutil;
+
+enum TextureAccessPattern {
+    STATIC = SDL_TEXTUREACCESS_STATIC,
+    STREAMING = SDL_TEXTUREACCESS_STREAMING,
+    TARGET = SDL_TEXTUREACCESS_TARGET
+}
 
 /**
  * An image that can be rendered.

@@ -41,12 +41,6 @@ enum InitState {
     NOT_INIT, INIT, QUIT
 }
 
-enum TextureAccessPattern {
-    STATIC = SDL_TEXTUREACCESS_STATIC,
-    STREAMING = SDL_TEXTUREACCESS_STREAMING,
-    TARGET = SDL_TEXTUREACCESS_TARGET
-}
-
 // END SECTION CONSTANTS_AND_TYPES
 
 private InitState[SDLModule] moduleStates = null;
