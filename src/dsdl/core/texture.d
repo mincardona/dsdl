@@ -5,6 +5,7 @@ import derelict.sdl2.image;
 import std.string;
 import dsdl.core.renderer;
 import dsdl.core.releaseable;
+import dsdl.core.sdlutil;
 
 /**
  * An image that can be rendered.
@@ -39,18 +40,20 @@ class Texture : Releaseable {
 
     /**
      * Creates a new (blank) texture.
-     * The texture is marked as a possible render target, and the exact contents of the new texture are undefined.
+     * The exact contents of the new texture are undefined. It uses the RGBA8888 pixel format.
      * Params:
      *      width = the desired width of the texture
      *      height = the desired height of the texture
      *      rend = the renderer to create the texture with
+     *      access = the texture access pattern (default is STATIC)
      */
-	public this(int width, int height, Renderer rend) {
+	public this(int width, int height, Renderer rend,
+                TextureAccessPattern access = TextureAccessPattern.STATIC) {
 	    this._width = width;
 	    this._height = height;
 	    this._format = SDL_PIXELFORMAT_RGBA8888;
 	    this.texture = SDL_CreateTexture(
-                rend.ptr, this._format, SDL_TEXTUREACCESS_TARGET, width, height);
+                rend.ptr, this._format, cast(int)access, width, height);
 	}
 
 	@property {
