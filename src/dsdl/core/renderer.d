@@ -24,7 +24,6 @@ class Renderer : Releaseable {
     public static enum LOW_QUALITY = false;
 
     private SDL_Renderer* renderer;
-    private SDLColor _drawColor;
 
     private Texture renderTarget;
 
@@ -93,14 +92,15 @@ class Renderer : Releaseable {
 
         /** The color used to draw on this renderer (also used for clearing the renderer) */
         public SDLColor drawColor() {
-            return _drawColor;
+            SDLColor color;
+            SDL_GetRenderDrawColor(
+                this.ptr, &color.r, &color.g, &color.b, &color.a);
+            return color;
         }
 
-        public SDLColor drawColor(SDLColor color) {
-            _drawColor = color;
+        public void drawColor(SDLColor color) {
             SDL_SetRenderDrawColor(
-                renderer, _drawColor.r, _drawColor.g, _drawColor.b, _drawColor.a);
-            return _drawColor;
+                this.ptr, color.r, color.g, color.b, color.a);
         }
 
         /** The name of the render "device" being used by ths renderer (e.g. opengl, directx, etc.) */
