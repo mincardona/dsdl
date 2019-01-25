@@ -10,6 +10,7 @@ import dsdl.core.texture;
 import dsdl.ttf.font;
 import std.string;
 import dsdl.core.releaseable;
+import dsdl.core.sdlutil;
 
 /**
  * Renders graphics to a window using hardware acceleration.
@@ -252,6 +253,27 @@ class Renderer : Releaseable {
      */
     public Texture getRenderTarget() {
         return renderTarget;
+    }
+
+    /**
+     * Sets the logical resolution of the rendering output.
+     * @param size the resolution
+     */
+    public void setLogicalSize(Resolution size) {
+        SDL_RenderSetLogicalSize(this.ptr, cast(int)size.x, cast(int)size.y);
+    }
+
+    /**
+     * Gets the logical resolution of the rendering output.
+     * @return the logical resolution, or (0, 0) if it was never set
+     */
+    public Resolution getLogicalSize() {
+        Resolution res;
+        int x, y;
+        SDL_RenderGetLogicalSize(this.ptr, &x, &y);
+        res.x = cast(uint)x;
+        res.y = cast(uint)y;
+        return res;
     }
 
 	/**
