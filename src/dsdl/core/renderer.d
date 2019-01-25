@@ -12,6 +12,13 @@ import std.string;
 import dsdl.core.releaseable;
 import dsdl.core.sdlutil;
 
+enum BlendMode : int {
+    NONE = SDL_BLENDMODE_NONE,
+    BLEND = SDL_BLENDMODE_BLEND,
+    ADD = SDL_BLENDMODE_ADD,
+    MOD = SDL_BLENDMODE_MOD
+}
+
 /**
  * Renders graphics to a window using hardware acceleration.
  * Authors: Michael Incardona
@@ -101,6 +108,16 @@ class Renderer : Releaseable {
         public void drawColor(SDLColor color) {
             SDL_SetRenderDrawColor(
                 this.ptr, color.r, color.g, color.b, color.a);
+        }
+
+        public void drawBlendMode(BlendMode mode) {
+            SDL_SetRenderDrawBlendMode(this.ptr, mode);
+        }
+
+        public BlendMode drawBlendMode() {
+            int mode;
+            SDL_GetRenderDrawBlendMode(this.ptr, &mode);
+            return cast(BlendMode)mode;
         }
 
         /** The name of the render "device" being used by ths renderer (e.g. opengl, directx, etc.) */
