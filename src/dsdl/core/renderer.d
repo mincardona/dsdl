@@ -237,6 +237,18 @@ class Renderer : Releaseable {
 	}
 
     /**
+     * Renders a texture.
+     * Params:
+     *      img = the texture to render
+     *      src = the portion of the texture to render
+     *      dest = the target area
+     */
+    public void renderTexture(Texture img, SDLRect src, SDLRect dest) {
+        SDL_RenderCopy(this.ptr, img.ptr, &src, &dest);
+        return;
+    }
+
+    /**
      * Sets a texture as the render target, or restores the target to the
      * default.
      *
@@ -297,18 +309,6 @@ class Renderer : Releaseable {
 	 */
 	public void render() {
 	    SDL_RenderPresent(this.ptr);
-	}
-
-    /**
-     * Renders a texture.
-     * Params:
-     *      img = the texture to render
-     *      src = the portion of the texture to render
-     *      dest = the target area
-     */
-    public void renderTexture(Texture img, SDLRect src, SDL_Rect dest) {
-		SDL_RenderCopy(this.ptr, img.ptr, &src, &dest);
-		return;
 	}
 
     /**
