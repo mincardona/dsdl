@@ -223,8 +223,8 @@ class Renderer : Releaseable {
      * Renders a texture.
      * Params:
      *      img = the texture to render
-     *      x = the x-coordinate of the upper left corner of the texture's target lcoation
-     *      y = the y-coordinate of the upper left corner of the texture's target lcoation
+     *      x = the x-coordinate of the upper left corner of the texture's target location
+     *      y = the y-coordinate of the upper left corner of the texture's target location
      */
     public void renderTexture(Texture img, int x, int y) {
 		SDLRect pos;
