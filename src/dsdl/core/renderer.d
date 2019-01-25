@@ -19,17 +19,16 @@ enum BlendMode : int {
     MOD = SDL_BLENDMODE_MOD
 }
 
+enum TextQuality : bool {
+    HIGH = true,
+    LOW = false
+}
+
 /**
  * Renders graphics to a window using hardware acceleration.
  * Authors: Michael Incardona
  */
 class Renderer : Releaseable {
-
-    /** Used to specifiy high quality for certain operations. */
-    public static enum HIGH_QUALITY = true;
-    /** Used to specify low quality for certain operations. */
-    public static enum LOW_QUALITY = false;
-
     private SDL_Renderer* renderer;
 
     private Texture renderTarget;
@@ -147,14 +146,14 @@ class Renderer : Releaseable {
      * Params:
      *      txt = the text to render
      *      font = the font to render the text in
-     *      highQuality = true (HIGH_QUALITY) if text smoothing/antialiasing should be used
+     *      quality = whether high-quality text smoothing should be used
      *      fg = the color to draw the text in
      * Returns: a texture containing the rendered text
      */
-    public Texture renderTextToTexture(string txt, Font font, bool highQuality, SDLColor fg) {
+    public Texture renderTextToTexture(string txt, Font font, TextQuality quality, SDLColor fg) {
         SDL_Surface* surf = null;
         auto cstr = toStringz(txt);
-        if (highQuality) {
+        if (quality == TextQuality.HIGH) {
             surf = TTF_RenderText_Blended(font.ptr, cstr, fg);
         } else {
             surf = TTF_RenderText_Solid(font.ptr, cstr, fg);
@@ -195,12 +194,12 @@ class Renderer : Releaseable {
      *      font = the font to render the text in
      *      x = the x-coordinate of the upper-left corner of the text's target location
      *      y = the y-coordinate of the upper-left corner of the text's target location
-     *      highQuality = true (HIGH_QUALITY) if text smoothing/antialiasing should be used
+     *      quality = whether high-quality text smoothing should be used
      *      fg = the color to draw the text in
      */
     public void renderText(string txt, Font font, int x, int y,
-                           bool highQuality, SDLColor fg) {
-        Texture tex = renderTextToTexture(txt, font, highQuality, fg);
+                           TextQuality quality, SDLColor fg) {
+        Texture tex = renderTextToTexture(txt, font, quality, fg);
         renderTexture(tex, x, y);
     }
 
