@@ -25,8 +25,8 @@ enum ALPHA_TRANSPARENT = SDL_ALPHA_TRANSPARENT;
 enum MICROS_PER_S = 1000000;
 enum MS_PER_S = 1000;
 
-alias SDL_Color SDLColor;
-alias SDL_Rect SDLRect;
+alias SDLColor = SDL_Color;
+alias SDLRect = SDL_Rect;
 
 alias Resolution = Tuple!(uint, "x", uint, "y");
 
