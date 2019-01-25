@@ -19,9 +19,9 @@ import dsdl.core.sdlutil;
 class Renderer : Releaseable {
 
     /** Used to specifiy high quality for certain operations. */
-    public static immutable HIGH_QUALITY = true;
+    public static enum HIGH_QUALITY = true;
     /** Used to specify low quality for certain operations. */
-    public static immutable LOW_QUALITY = false;
+    public static enum LOW_QUALITY = false;
 
     private SDL_Renderer* renderer;
     private SDLColor _drawColor;
