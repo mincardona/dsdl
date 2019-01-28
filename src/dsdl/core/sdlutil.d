@@ -27,6 +27,7 @@ enum MS_PER_S = 1000;
 
 alias SDLColor = SDL_Color;
 alias SDLRect = SDL_Rect;
+alias SDLPoint = SDL_Point;
 
 alias Resolution = Tuple!(uint, "x", uint, "y");
 
