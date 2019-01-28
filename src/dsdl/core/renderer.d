@@ -284,6 +284,14 @@ class Renderer : Releaseable {
         SDL_RenderDrawLines(this.ptr, points.ptr, cast(int)points.length);
     }
 
+    public void drawPoint(SDLPoint p) {
+        SDL_RenderDrawPoint(this.ptr, p.x, p.y);
+    }
+
+    public void drawPoints(SDLPoint[] p) {
+        SDL_RenderDrawPoints(this.ptr, p.ptr, cast(int)p.length);
+    }
+
     /**
      * Sets a texture as the render target, or restores the target to the
      * default.
