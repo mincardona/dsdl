@@ -248,6 +248,42 @@ class Renderer : Releaseable {
         return;
     }
 
+    ////////////////////////////////
+    // Drawing primitives methods //
+    ////////////////////////////////
+
+    public void drawRect() {
+        SDL_RenderDrawRect(this.ptr, null);
+    }
+
+    public void drawRect(SDLRect rect) {
+        SDL_RenderDrawRect(this.ptr, &rect);
+    }
+
+    public void drawRects(SDLRect[] rects) {
+        SDL_RenderDrawRects(this.ptr, rects.ptr, cast(int)rects.length);
+    }
+
+    public void fillRect() {
+        SDL_RenderFillRect(this.ptr, null);
+    }
+
+    public void fillRect(SDLRect rect) {
+        SDL_RenderFillRect(this.ptr, &rect);
+    }
+
+    public void fillRects(SDLRect[] rects) {
+        SDL_RenderFillRects(this.ptr, rects.ptr, cast(int)rects.length);
+    }
+
+    public void drawLine(SDLPoint p1, SDLPoint p2) {
+        SDL_RenderDrawLine(this.ptr, p1.x, p1.y, p2.x, p2.y);
+    }
+
+    public void drawLines(SDLPoint[] points) {
+        SDL_RenderDrawLines(this.ptr, points.ptr, cast(int)points.length);
+    }
+
     /**
      * Sets a texture as the render target, or restores the target to the
      * default.
