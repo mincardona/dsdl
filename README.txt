@@ -31,7 +31,6 @@ Possible future additions:
         - Text input
         - Timer callbacks
         - Better render-to-texture support
-        - Geometric primitives
 
     Low priority:
         - Wrap SDL_net (low priority because std.socket provides similar functionality)
