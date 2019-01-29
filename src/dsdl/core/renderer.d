@@ -11,6 +11,7 @@ import dsdl.ttf.font;
 import std.string;
 import dsdl.core.releaseable;
 import dsdl.core.sdlutil;
+import dsdl.core.error;
 
 enum BlendMode : int {
     NONE = SDL_BLENDMODE_NONE,
