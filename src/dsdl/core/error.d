@@ -2,17 +2,17 @@ module dsdl.core.error;
 
 import std.string;
 import derelict.sdl2.sdl;
+import derelict.sdl2.image;
 
-class SDLException : Exception {
-    int _code;
+/**
+ * Abstract superclass for SDL and satellite library exceptions.
+ * It stores an int error code in addition to a message.
+ */
+abstract class AbstractSDLException : Exception {
+    private int _code;
 
     public this(string msg, int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
         super(msg, file, line);
-        this._code = code;
-    }
-
-    public this(int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
-        super(fromStringz(SDL_GetError()).idup, file, line);
         this._code = code;
     }
 
@@ -21,14 +21,53 @@ class SDLException : Exception {
     }
 }
 
-void sdlEnforceZero(int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
-    if (code != 0) {
-        throw new SDLException(code, file, line);
+/**
+ * A convenient mixin template for creating constructors for subclasses of
+ * AbstractSDLException. See SDLCoreException for a usage example.
+ * @param ErrorTextFunction the name of the C function to call to get the last
+ * error string (e.g. SDL_GetError)
+ */
+mixin template SDLExceptionSubclassThis(alias ErrorTextFunction)
+{
+    /**
+     * Construct the exception with a custom int code and a custom message.
+     */
+    public this(string msg, int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
+        super(msg, code, file, line);
+    }
+
+    /**
+     * Construct the exception with a custom int code and a message derived
+     * from the error string function given as a template parameter.
+     */
+    public this(int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
+        super(fromStringz(ErrorTextFunction()).idup, code, file, line);
     }
 }
 
-void sdlEnforceNatural(int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
+/**
+ * Thrown to signify an error in the core SDL library.
+ */
+class SDLCoreException : AbstractSDLException {
+    // use SDL_GetError to get the last error string
+    mixin SDLExceptionSubclassThis!(SDL_GetError);
+}
+
+/**
+ * If code is not zero, throw an AbstractSDLException-derived exception of the
+ * given type with that code.
+ */
+void sdlEnforceZero(ExceptionType)(int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
+    if (code != 0) {
+        throw new ExceptionType(code, file, line);
+    }
+}
+
+/**
+ * Same as sdlEnforceZero, but throw only when the code is negative.
+ */
+void sdlEnforceNatural(ExceptionType)(int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
     if (code < 0) {
-        throw new SDLException(code, file, line);
+        throw new ExceptionType(code, file, line);
     }
 }
