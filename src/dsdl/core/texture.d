@@ -32,10 +32,10 @@ class Texture : Releaseable {
      */
     public this(string filePath, Renderer renderer) {
         this.texture = sdlEnforcePtr!SDLIMGException(
-            IMG_LoadTexture(renderer.ptr, toStringz(filePath)
+            IMG_LoadTexture(renderer.ptr, toStringz(filePath))
         );
         try {
-            _querytexture();
+            _queryTexture();
         } catch (Exception e) {
             this.release();
             throw e;
@@ -53,7 +53,7 @@ class Texture : Releaseable {
         }
         this.texture = texture;
         try {
-            _querytexture();
+            _queryTexture();
         } catch (Exception e) {
             this.texture = null;
             throw e;
