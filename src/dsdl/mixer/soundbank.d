@@ -24,10 +24,11 @@ class SoundBank : ResourceBank!SoundChunk {
             return;
         }
         foreach (ref string line; lns) {
-            long indexOfSpace = indexOfAny(line, " \t");
+            auto indexOfSpace = indexOfAny(line, " \t");
             if (indexOfSpace == -1 || indexOfSpace == line.length) {
                 throw new DataFormatException("Unable to parse file \"" ~ chunkListFile ~ "\"");
             }
+
             string chunkName = line[0..indexOfSpace];
             if (!this.has(chunkName)) {
                 string chunkPath = rootAssetDir ~ line[indexOfSpace + 1 .. $];

@@ -11,7 +11,7 @@ import derelict.sdl2.image;
 abstract class AbstractSDLException : Exception {
     private int _code;
 
-    public this(string msg, int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
+    public this(string msg, int code, string file = __FILE__, size_t line = cast(size_t)__LINE__) {
         super(msg, file, line);
         this._code = code;
     }
@@ -37,7 +37,7 @@ if (isSomeFunction!ErrorTextFunction && arity!ErrorTextFunction == 0
     /**
      * Construct the exception with a custom int code and a custom message.
      */
-    public this(string msg, int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
+    public this(string msg, int code, string file = __FILE__, size_t line = cast(size_t)__LINE__) {
         super(msg, code, file, line);
     }
 
@@ -45,7 +45,7 @@ if (isSomeFunction!ErrorTextFunction && arity!ErrorTextFunction == 0
      * Construct the exception with a custom int code and a message derived
      * from the error string function given as a template parameter.
      */
-    public this(int code, string file = __FILE__, ulong line = cast(ulong)__LINE__) {
+    public this(int code, string file = __FILE__, size_t line = cast(size_t)__LINE__) {
         // keep this import here so client files do not have to import it
         import std.string : fromStringz;
         super(fromStringz(ErrorTextFunction()).idup, code, file, line);
@@ -71,19 +71,32 @@ class SDLIMGException : AbstractSDLException {
  * If code is not zero, throw an AbstractSDLException-derived exception of the
  * given type with that code.
  */
-void sdlEnforceZero(ExceptionType)(int code, string file = __FILE__, ulong line = cast(ulong)__LINE__)
+int sdlEnforceZero(ExceptionType)
+    (int code, string file = __FILE__, size_t line = cast(size_t)__LINE__)
 if (is(ExceptionType : AbstractSDLException)) {
     if (code != 0) {
         throw new ExceptionType(code, file, line);
     }
+    return code;
 }
 
 /**
  * Same as sdlEnforceZero, but throw only when the code is negative.
  */
-void sdlEnforceNatural(ExceptionType)(int code, string file = __FILE__, ulong line = cast(ulong)__LINE__)
+int sdlEnforceNatural(ExceptionType)
+    (int code, string file = __FILE__, size_t line = cast(size_t)__LINE__)
 if (is(ExceptionType : AbstractSDLException)) {
     if (code < 0) {
         throw new ExceptionType(code, file, line);
     }
+    return code;
+}
+
+PointedType* sdlEnforcePtr(ExceptionType, PointedType)
+    (PointedType* ptr, string file = __FILE__, size_t line = cast(size_t)__LINE__)
+if (is(ExceptionType : AbstractSDLException)) {
+    if (ptr is null) {
+        throw new ExceptionType(0, file, line);
+    }
+    return ptr;
 }
