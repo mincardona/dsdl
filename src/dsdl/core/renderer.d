@@ -217,7 +217,9 @@ class Renderer : Releaseable {
             throw new SDLTTFException("Attempt to render null font to texture (shaded)", 0);
         }
 
-        SDL_Surface* surf = sdlEnforcePtr!SDLTTFException(TTF_RenderText_Shaded(font.ptr, toStringz(txt), fg, bg));
+        SDL_Surface* surf = sdlEnforcePtr!SDLTTFException(
+            TTF_RenderText_Shaded(font.ptr, toStringz(txt), fg, bg)
+        );
 
         SDL_Texture* tex;
         try {
@@ -299,43 +301,55 @@ class Renderer : Releaseable {
     ////////////////////////////////
 
     public void drawRect() {
-        SDL_RenderDrawRect(this.ptr, null);
+        sdlEnforceZero!SDLCoreException(SDL_RenderDrawRect(this.ptr, null));
     }
 
     public void drawRect(SDLRect rect) {
-        SDL_RenderDrawRect(this.ptr, &rect);
+        sdlEnforceZero!SDLCoreException(SDL_RenderDrawRect(this.ptr, &rect));
     }
 
     public void drawRects(SDLRect[] rects) {
-        SDL_RenderDrawRects(this.ptr, rects.ptr, cast(int)rects.length);
+        sdlEnforceZero!SDLCoreException(
+            SDL_RenderDrawRects(this.ptr, rects.ptr, cast(int)rects.length)
+        );
     }
 
     public void fillRect() {
-        SDL_RenderFillRect(this.ptr, null);
+        sdlEnforceZero!SDLCoreException(SDL_RenderFillRect(this.ptr, null));
     }
 
     public void fillRect(SDLRect rect) {
-        SDL_RenderFillRect(this.ptr, &rect);
+        sdlEnforceZero!SDLCoreException(SDL_RenderFillRect(this.ptr, &rect));
     }
 
     public void fillRects(SDLRect[] rects) {
-        SDL_RenderFillRects(this.ptr, rects.ptr, cast(int)rects.length);
+        sdlEnforceZero!SDLCoreException(
+            SDL_RenderFillRects(this.ptr, rects.ptr, cast(int)rects.length)
+        );
     }
 
     public void drawLine(SDLPoint p1, SDLPoint p2) {
-        SDL_RenderDrawLine(this.ptr, p1.x, p1.y, p2.x, p2.y);
+        sdlEnforceZero!SDLCoreException(
+            SDL_RenderDrawLine(this.ptr, p1.x, p1.y, p2.x, p2.y)
+        );
     }
 
     public void drawLines(SDLPoint[] points) {
-        SDL_RenderDrawLines(this.ptr, points.ptr, cast(int)points.length);
+        sdlEnforceZero!SDLCoreException(
+            SDL_RenderDrawLines(this.ptr, points.ptr, cast(int)points.length)
+        );
     }
 
     public void drawPoint(SDLPoint p) {
-        SDL_RenderDrawPoint(this.ptr, p.x, p.y);
+        sdlEnforceZero!SDLCoreException(
+            SDL_RenderDrawPoint(this.ptr, p.x, p.y)
+        );
     }
 
     public void drawPoints(SDLPoint[] p) {
-        SDL_RenderDrawPoints(this.ptr, p.ptr, cast(int)p.length);
+        sdlEnforceZero!SDLCoreException(
+            SDL_RenderDrawPoints(this.ptr, p.ptr, cast(int)p.length)
+        );
     }
 
     /**
@@ -354,15 +368,10 @@ class Renderer : Releaseable {
      * default target
      */
     public void setRenderTarget(Texture tex) {
-        // TODO: handle errors when after calling SDL_SetRenderTarget
-        if (tex is null) {
-            this.renderTarget = null;
-            SDL_SetRenderTarget(this.ptr, null);
-        } else {
-            // also store the texture in this object
-            this.renderTarget = tex;
-            SDL_SetRenderTarget(this.ptr, tex.ptr);
-        }
+        sdlEnforceZero!SDLCoreException(
+            SDL_SetRenderTarget(this.ptr, tex is null ? null : tex.ptr)
+        );
+        this.renderTarget = tex;
     }
 
     /**
@@ -378,7 +387,9 @@ class Renderer : Releaseable {
      * @param size the resolution
      */
     public void setLogicalSize(Resolution size) {
-        SDL_RenderSetLogicalSize(this.ptr, cast(int)size.x, cast(int)size.y);
+        sdlEnforceZero!SDLCoreException(
+            SDL_RenderSetLogicalSize(this.ptr, cast(int)size.x, cast(int)size.y)
+        );
     }
 
     /**
@@ -386,12 +397,9 @@ class Renderer : Releaseable {
      * @return the logical resolution, or (0, 0) if it was never set
      */
     public Resolution getLogicalSize() {
-        Resolution res;
         int x, y;
         SDL_RenderGetLogicalSize(this.ptr, &x, &y);
-        res.x = cast(uint)x;
-        res.y = cast(uint)y;
-        return res;
+        return Resolution(cast(uint)x, cast(uint)y);
     }
 
 	/**
@@ -405,7 +413,7 @@ class Renderer : Releaseable {
      * Clears the render buffer.
      */
     public void clear() {
-        SDL_RenderClear(this.ptr);
+        sdlEnforceZero!SDLCoreException(SDL_RenderClear(this.ptr));
     }
 
     public void renderAndClear() {
