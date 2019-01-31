@@ -12,6 +12,7 @@ import std.string;
 import dsdl.core.releaseable;
 import dsdl.core.sdlutil;
 import dsdl.core.error;
+import dsdl.ttf.error;
 
 enum BlendMode : int {
     NONE = SDL_BLENDMODE_NONE,
@@ -64,9 +65,7 @@ class Renderer : Releaseable {
         SDL_RendererInfo rinfo;
         auto ex = regex(prefer);
         int maxRender;
-        sdlEnforceNatural!SDLCoreException(
-            maxRender = SDL_GetNumRenderDrivers()
-        );
+        maxRender = sdlEnforceNatural!SDLCoreException(SDL_GetNumRenderDrivers());
 
         int renderIndex;
         for (renderIndex = 0; renderIndex < maxRender; renderIndex++) {
@@ -83,10 +82,9 @@ class Renderer : Releaseable {
             renderIndex = -1;
         }
 
-        renderer = SDL_CreateRenderer(window.ptr, renderIndex, flags);
-        if (renderer is null) {
-            throw new SDLCoreException(0);
-        }
+        renderer = sdlEnforcePtr!SDLCoreException(
+            SDL_CreateRenderer(window.ptr, renderIndex, flags)
+        );
 
         try {
             drawColor = SDLColor(0, 0, 0, ALPHA_OPAQUE);
@@ -182,12 +180,16 @@ class Renderer : Releaseable {
         } else {
             surf = TTF_RenderText_Solid(font.ptr, cstr, fg);
         }
-        SDL_Texture* tex = SDL_CreateTextureFromSurface(this.ptr, surf);
-        if (tex is null) {
-            return null;
-        } else {
-            return new Texture(tex);
+
+        SDL_Texture* tex;
+        try {
+            tex = sdlEnforcePtr!SDLCoreException(
+                SDL_CreateTextureFromSurface(this.ptr, surf)
+            );
+        } finally {
+            SDL_FreeSurface(surf);
         }
+        return new Texture(tex);
     }
 
     /**
