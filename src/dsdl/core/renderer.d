@@ -63,11 +63,16 @@ class Renderer : Releaseable {
 
         SDL_RendererInfo rinfo;
         auto ex = regex(prefer);
-        int maxRender = SDL_GetNumRenderDrivers();
-        int renderIndex;
+        int maxRender;
+        sdlEnforceNatural!SDLCoreException(
+            maxRender = SDL_GetNumRenderDrivers()
+        );
 
+        int renderIndex;
         for (renderIndex = 0; renderIndex < maxRender; renderIndex++) {
-            SDL_GetRenderDriverInfo(renderIndex, &rinfo);
+            sdlEnforceZero!SDLCoreException(
+                SDL_GetRenderDriverInfo(renderIndex, &rinfo)
+            );
             auto indexName = fromStringz(rinfo.name);
             if (!matchFirst(indexName, ex).empty) {
                 break;
@@ -79,17 +84,29 @@ class Renderer : Releaseable {
         }
 
         renderer = SDL_CreateRenderer(window.ptr, renderIndex, flags);
+        if (renderer is null) {
+            throw new SDLCoreException(0);
+        }
 
-        drawColor = SDLColor(0, 0, 0, ALPHA_OPAQUE);
-        // returns 0 on success
-        SDL_GetRendererInfo(renderer, &rinfo);
-        // .idup ensures that the converted string is an immutable deep copy
-        _name = fromStringz(rinfo.name).idup;
-        _isVsyncEnabled = areFlagsSet(rinfo.flags, SDL_RENDERER_PRESENTVSYNC);
-        _isSoftware = areFlagsSet(rinfo.flags, SDL_RENDERER_SOFTWARE);
-        _isAccelerated = areFlagsSet(rinfo.flags, SDL_RENDERER_ACCELERATED);
-        _isTargetTextureSupported = areFlagsSet(rinfo.flags, SDL_RENDERER_TARGETTEXTURE);
-        this.clear();
+        try {
+            drawColor = SDLColor(0, 0, 0, ALPHA_OPAQUE);
+
+            sdlEnforceZero!SDLCoreException(
+                SDL_GetRendererInfo(renderer, &rinfo)
+            );
+            // .idup ensures that the converted string is an immutable deep copy
+            _name = fromStringz(rinfo.name).idup;
+            _isVsyncEnabled = areFlagsSet(rinfo.flags, SDL_RENDERER_PRESENTVSYNC);
+            _isSoftware = areFlagsSet(rinfo.flags, SDL_RENDERER_SOFTWARE);
+            _isAccelerated = areFlagsSet(rinfo.flags, SDL_RENDERER_ACCELERATED);
+            _isTargetTextureSupported = areFlagsSet(rinfo.flags, SDL_RENDERER_TARGETTEXTURE);
+
+            this.clear();
+        } catch (Exception e) {
+            SDL_DestroyRenderer(renderer);
+            renderer = null;
+            throw e;
+        }
     }
 
     @property {
@@ -100,23 +117,29 @@ class Renderer : Releaseable {
         /** The color used to draw on this renderer (also used for clearing the renderer) */
         public SDLColor drawColor() {
             SDLColor color;
-            SDL_GetRenderDrawColor(
-                this.ptr, &color.r, &color.g, &color.b, &color.a);
+            sdlEnforceZero!SDLCoreException(
+                SDL_GetRenderDrawColor(this.ptr, &color.r, &color.g, &color.b, &color.a)
+            );
             return color;
         }
 
         public void drawColor(SDLColor color) {
-            SDL_SetRenderDrawColor(
-                this.ptr, color.r, color.g, color.b, color.a);
+            sdlEnforceZero!SDLCoreException(
+                SDL_SetRenderDrawColor(this.ptr, color.r, color.g, color.b, color.a)
+            );
         }
 
         public void drawBlendMode(BlendMode mode) {
-            SDL_SetRenderDrawBlendMode(this.ptr, mode);
+            sdlEnforceZero!SDLCoreException(
+                SDL_SetRenderDrawBlendMode(this.ptr, mode)
+            );
         }
 
         public BlendMode drawBlendMode() {
             int mode;
-            SDL_GetRenderDrawBlendMode(this.ptr, &mode);
+            sdlEnforceZero!SDLCoreException(
+                SDL_GetRenderDrawBlendMode(this.ptr, &mode)
+            );
             return cast(BlendMode)mode;
         }
 
