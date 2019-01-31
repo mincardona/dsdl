@@ -1,3 +1,6 @@
+/**
+ * @bug Should use UTF8 TTF rendering functions instead of ASCII
+ */
 module dsdl.core.renderer;
 
 import std.regex;
@@ -173,14 +176,21 @@ class Renderer : Releaseable {
      * Returns: a texture containing the rendered text
      */
     public Texture renderTextToTexture(string txt, Font font, TextQuality quality, SDLColor fg) {
+        // the TTF functions used here will segfault on a null font per the docs
+        if (font is null) {
+            throw new SDLTTFException("Attempt to render null font to texture", 0);
+        }
+
+        // create surface
         SDL_Surface* surf = null;
         auto cstr = toStringz(txt);
         if (quality == TextQuality.HIGH) {
-            surf = TTF_RenderText_Blended(font.ptr, cstr, fg);
+            surf = sdlEnforcePtr!SDLTTFException(TTF_RenderText_Blended(font.ptr, cstr, fg));
         } else {
-            surf = TTF_RenderText_Solid(font.ptr, cstr, fg);
+            surf = sdlEnforcePtr!SDLTTFException(TTF_RenderText_Solid(font.ptr, cstr, fg));
         }
 
+        // convert surface to texture
         SDL_Texture* tex;
         try {
             tex = sdlEnforcePtr!SDLCoreException(
@@ -203,14 +213,22 @@ class Renderer : Releaseable {
      */
     public Texture renderTextToTextureShaded(string txt, Font font,
                                              SDLColor fg, SDLColor bg) {
-        SDL_Surface* surf = null;
-        surf = TTF_RenderText_Shaded(font.ptr, toStringz(txt), fg, bg);
-        SDL_Texture* tex = SDL_CreateTextureFromSurface(this.ptr, surf);
-        if (tex is null) {
-            return null;
-        } else {
-            return new Texture(tex);
+        if (font is null) {
+            throw new SDLTTFException("Attempt to render null font to texture (shaded)", 0);
         }
+
+        SDL_Surface* surf = sdlEnforcePtr!SDLTTFException(TTF_RenderText_Shaded(font.ptr, toStringz(txt), fg, bg));
+
+        SDL_Texture* tex;
+        try {
+            tex = sdlEnforcePtr!SDLCoreException(
+                SDL_CreateTextureFromSurface(this.ptr, surf)
+            );
+        } finally {
+            SDL_FreeSurface(surf);
+        }
+
+        return new Texture(tex);
     }
 
     /**
@@ -227,6 +245,7 @@ class Renderer : Releaseable {
                            TextQuality quality, SDLColor fg) {
         Texture tex = renderTextToTexture(txt, font, quality, fg);
         renderTexture(tex, x, y);
+        tex.release();
     }
 
     /**
@@ -243,6 +262,7 @@ class Renderer : Releaseable {
                                  SDLColor fg, SDLColor bg) {
         Texture tex = renderTextToTextureShaded(txt, font, fg, bg);
         renderTexture(tex, x, y);
+        tex.release();
     }
 
     /**
@@ -258,8 +278,7 @@ class Renderer : Releaseable {
 		pos.y = y;
 		pos.w = img.width;
 		pos.h = img.height;
-		SDL_RenderCopy(this.ptr, img.ptr, null, &pos);
-		return;
+		sdlEnforceZero!SDLCoreException(SDL_RenderCopy(this.ptr, img.ptr, null, &pos));
 	}
 
     /**
@@ -270,9 +289,10 @@ class Renderer : Releaseable {
      *      dest = the target area
      */
     public void renderTexture(Texture img, SDLRect src, SDLRect dest) {
-        SDL_RenderCopy(this.ptr, img.ptr, &src, &dest);
-        return;
+        sdlEnforceZero!SDLCoreException(SDL_RenderCopy(this.ptr, img.ptr, &src, &dest));
     }
+
+    // TODO: add functions for stretching the texture over the whole target
 
     ////////////////////////////////
     // Drawing primitives methods //
