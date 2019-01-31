@@ -2,25 +2,25 @@
     "name": "dsdl",
     "description": "D language wrappers for the SDL library",
     "authors": ["Michael Incardona"],
-    
+
     "targetName": "dsdl",
-    
+
     "dependencies": {
-        "derelict-sdl2": "~>2.0.0"
+        "derelict-sdl2": "~>2.0"
     },
-    
+
     "buildRequirements": [
         "allowWarnings"
     ],
-    
+
     "buildOptions": [
-        
+
     ],
-    
+
     "importPaths": [
         "src"
     ],
-    
+
     "configurations": [
         {
             "name": "lib",
