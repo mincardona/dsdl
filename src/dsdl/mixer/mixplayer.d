@@ -50,7 +50,7 @@ final class MixPlayer {
      *      loops = the number of times to loop the music (default is -1, which indicates infinite loop)
      */
     public static void playMusic(MusicChunk m, int volume, int loops = -1) {
-        sdlEnforceZero!sdlMixerException(Mix_PlayMusic(m.ptr, loops));
+        sdlEnforceZero!SDLMixerException(Mix_PlayMusic(m.ptr, loops));
         setMusicVolume(volume);
     }
 
