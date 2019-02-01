@@ -5,6 +5,9 @@ import derelict.sdl2.mixer;
 import dsdl.mixer.soundchunk;
 import dsdl.mixer.musicchunk;
 import dsdl.core.sdlutil;
+import dsdl.core.error;
+import dsdl.mixer.error;
+import std.algorithm.comparison;
 
 /**
  * Contains fucntions for playing music and sound effects.
@@ -26,24 +29,28 @@ final class MixPlayer {
      * Plays a sound once on the first open channel.
      * Params:
      *      s = the sound to play
-     *      volume = the volume to play the song at (0-127)
+     *      volume = the volume to play the song at
      * Return: The channel the sound was played on
      */
     public static int playSound(SoundChunk s, int volume) {
         int chan = Mix_PlayChannel(-1, s.ptr, 0); //play the sound once on the first open channel
-        Mix_Volume(chan, volume);
+        setChannelVolume(chan, volume);
         return chan;
+    }
+
+    public static void setChannelVolume(int chan, int volume) {
+        Mix_Volume(chan, clamp(volume, -1, MIX_MAX_VOLUME));
     }
 
     /**
      * Plays music.
      * Params:
      *      m = the music to play
-     *      volume = the volume to play the music at (0-127)
+     *      volume = the volume to play the music at
      *      loops = the number of times to loop the music (default is -1, which indicates infinite loop)
      */
     public static void playMusic(MusicChunk m, int volume, int loops = -1) {
-        Mix_PlayMusic(m.ptr, loops);
+        sdlEnforceZero!sdlMixerException(Mix_PlayMusic(m.ptr, loops));
         setMusicVolume(volume);
     }
 
@@ -106,10 +113,10 @@ final class MixPlayer {
     /**
      * Sets the volume of the music currently playing.
      * Params:
-     *      volume = the volume to play music at (0-127)
+     *      volume = the volume to play music at (-1-MIX_MAX_VOLUME)
      */
     public static void setMusicVolume(int volume) {
-        Mix_VolumeMusic(volume);
+        Mix_VolumeMusic(clamp(volume, -1, MIX_MAX_VOLUME));
     }
 
     /**
